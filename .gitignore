@@ -22,6 +22,7 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+<<<<<<< HEAD
 npm-debug.log
 yarn-error.log
 
@@ -255,3 +256,5 @@ composer.lock
 *.css.map
 *.sass.map
 *.scss.map
+=======
+>>>>>>> origin/main
