@@ -37,11 +37,8 @@ return [
 
     'guards' => [
         'web' => [
-<<<<<<< HEAD
+
             'driver' => 'jwt',
-=======
-            'driver' => 'session',
->>>>>>> origin/main
             'provider' => 'users',
         ],
     ],
