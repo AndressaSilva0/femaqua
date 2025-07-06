@@ -1,68 +1,225 @@
+# 🚀 FEMAQUA API – Laravel 12 + JWT + Swagger
 
-# FEMAQUA
-FEMAQUA (Ferramentas Maravilhosas Que Adoro)
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+**FEMAQUA** – Ferramentas Maravilhosas Que Adoro – é uma API REST desenvolvida para o desafio técnico da **Biztrip**.  
+Essa aplicação permite o cadastro, listagem, filtro e remoção de ferramentas, organizadas por tags, com autenticação via **JWT** e documentação **Swagger**.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+🔗 Repositório: [github.com/AndressaSilva0/femaqua](https://github.com/AndressaSilva0/femaqua)
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## ✅ Requisitos Atendidos
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- [x] API REST com Laravel 12
+- [x] Porta 3000
+- [x] Cadastro de ferramentas com tags
+- [x] Listagem com filtro por `?tag=`
+- [x] Remoção por ID (restrita a admin)
+- [x] Autenticação JWT
+- [x] Documentação Swagger completa
+- [x] Migrations para banco MySQL
+- [x] README profissional e completo ✅
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## ⚙️ Tecnologias
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **PHP 8.2+**
+- **Laravel 12**
+- **MySQL**
+- **JWT (tymon/jwt-auth)**
+- **Swagger (l5-swagger)**
+- **Doctrine DBAL**
+- **Pest (testes)**
+- **Laravel Pint (formatador)**
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 💻 Como Rodar o Projeto
 
-## Laravel Sponsors
+### 📦 1. Clone o projeto
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+git clone https://github.com/AndressaSilva0/femaqua.git
+cd femaqua
+```
 
-### Premium Partners
+---
+## 📁 2. Instale as dependências
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
+### Windows (PowerShell ou CMD)
 
-## Contributing
+```bash
+ composer install
+```
+---
+### macOS / Linux
+```bash
+composer install
+```
+---
+## ⚙️ 3. Configure o `.env`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+cp .env.example .env
+```
+### Edite o arquivo `.env` com suas credenciais do banco de dados:
 
-## Code of Conduct
+```bash
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=femaqua_app
+DB_USERNAME=
+DB_PASSWORD=
+```
+---
+## 🔑 4. Gere a chave da aplicação
+```bash
+php artisan key:generate
+```
+---
+## 🔐 5. Gere o token JWT
+```bash
+php artisan jwt:secret
+```
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🧪 Exemplo .env
+```bash
+APP_NAME=Laravel
+APP_ENV=local
+APP_KEY=base64:xxxxx
+APP_DEBUG=true
+APP_URL=http://localhost:3000
 
-## Security Vulnerabilities
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=femaqua_app
+DB_USERNAME=
+DB_PASSWORD=
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+JWT_SECRET=chave_gerada
+JWT_TTL=60
+REFRESH_TTL=20160
 
-## License
+CACHE_STORE=database
+QUEUE_CONNECTION=database
+SESSION_DRIVER=database
+```
+---
+## 🛠️ 6. Rode as migrations
+```bash
+php artisan migrate
+```
+---
+## 📄 7. Gere a documentação Swagger
+```bash
+php artisan l5-swagger:generate
+```
+### Acesse a documentação em:
+```bash
+http://localhost:3000/api/documentation
+```
+---
+## ▶️ 8. Inicie o servidor
+```bash
+php artisan serve --port=3000
+```
+#### ou
+```bash
+composer serve
+```
+---
+## 🔐 Autenticação
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-<<<<<<< HEAD
->>>>>>> cefeadf (chore: add project boilerplate)
-=======
->>>>>>> origin/main
+- As rotas exigem autenticação JWT.
+
+- Usuários devem estar logados para cadastrar ferramentas.
+
+- Apenas usuários com tipo `admin` podem deletar ferramentas.
+
+---
+
+## 📡 Rotas da API
+### 🔓 Rotas Públicas
+| Método | Rota          | Ação                         |
+| ------ | ------------- | ---------------------------- |
+| POST   | /api/login    | Login e geração de token JWT |
+| POST   | /api/register | Registro de novo usuário     |
+
+### 🔐 Rotas Protegidas (JWT)
+> É necessário enviar o token no header `Authorization: Bearer {token}`
+
+#### 🔧 Tools (Ferramentas)
+| Método | Rota             | Ação                             |
+| ------ | ---------------- | -------------------------------- |
+| GET    | /api/tools       | Lista todas as ferramentas       |
+| GET    | /api/tools?tag=x | Lista ferramentas por tag        |
+| POST   | /api/tools       | Cadastra uma nova ferramenta     |
+| DELETE | /api/tools/{id}  | Deleta ferramenta (admin apenas) |
+
+#### 👤 Users
+| Método | Rota                   | Ação                         |
+| ------ | ---------------------- | ---------------------------- |
+| GET    | /api/users/list        | Lista todos os usuários      |
+| GET    | /api/users/show/{id}   | Mostra dados de um usuário   |
+| PUT    | /api/users/update/{id} | Atualiza dados de um usuário |
+| DELETE | /api/users/delete/{id} | Deleta um usuário            |
+
+#### 🔐 Autenticação
+| Método | Rota        | Ação                                    |
+| ------ | ----------- | --------------------------------------- |
+| POST   | /api/logout | Logout do usuário autenticado           |
+| GET    | /api/me     | Retorna os dados do usuário autenticado |
+
+---
+## 💬 Exemplo de Cadastro
+### Requisição
+```bash
+POST /api/tools
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "title": "Notion",
+  "link": "https://notion.so",
+  "description": "All in one workspace",
+  "tags": ["organization", "calendar"]
+}
+```
+
+### Resposta esperada
+```bash
+{
+  "title": "Notion",
+  "link": "https://notion.so",
+  "description": "All in one workspace",
+  "tags": ["organization", "calendar"],
+  "id": 1
+}
+```
+
+## 💡 Bônus Implementados
+- 🔒 Autenticação via JWT com proteção de rotas
+
+- 🧩 Relacionamento many-to-many entre Tools ↔ Tags
+
+- 📑 Swagger com anotações OpenAPI
+
+- 🔁 Migrations + Seeders
+
+- 📦 Estrutura limpa com Controllers, Models e Services
+- 🖼 Bônus: Modelagem Banco de Dados + Desenho funcionamento da Api
+---
+## 📥 Modelagem Banco de Dados
+![Funcionamento do Banco de Dados](assets\femaqua.png)
+> [Database Model Link](https://dbdiagram.io/d/femaqua-68645470f413ba3508cb6c38)
+---
+## 💻 Desenho do Funcionamento da API
+![Funcionamento do Banco de Dados](assets\funcionamento-api.png)
+---
+## 🧠 Autor
+
+#### Desenvolvido com 💜 por Andressa Silva 

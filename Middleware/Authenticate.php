@@ -5,7 +5,9 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use Exception;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class Authenticate
 {
@@ -20,10 +22,14 @@ class Authenticate
     public function handle(Request $request, Closure $next, ...$guards)
     {
         try {
-            // Tenta autenticar o usuário pelo token JWT
+            
             $user = JWTAuth::parseToken()->authenticate();
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Token inválido ou não informado.'], 401);
+        } catch (TokenExpiredException $e) {
+            return response()->json(['error' => 'Token expirado.'], 401);
+        } catch (TokenInvalidException $e) {
+            return response()->json(['error' => 'Token inválido.'], 401);
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Token não informado.'], 401);
         }
 
         return $next($request);

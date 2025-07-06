@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+
 
 /**
  * @OA\Info(
@@ -36,10 +38,10 @@ use Illuminate\Support\Facades\Hash;
  */
 class UserController extends Controller
 {
-    /**
+   /**
      * @OA\Get(
      *     path="/api/users",
-     *     summary="Get list of all users",
+     *     summary="List all users",
      *     tags={"User"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
@@ -52,8 +54,15 @@ class UserController extends Controller
      */
     public function index()
     {
+        $authUser = Auth::user();
+
+        if ($authUser->type !== 'admin') {
+            return response()->json(['message' => 'Apenas administradores podem acessar esta rota.'], 403);
+        }
+
         return response()->json(User::all());
     }
+
 
     /**
      * @OA\Post(
@@ -70,14 +79,8 @@ class UserController extends Controller
      *             @OA\Property(property="type", type="string", example="user")
      *         )
      *     ),
-     *     @OA\Response(
-     *         response=201,
-     *         description="User created"
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error"
-     *     )
+     *     @OA\Response(response=201, description="User created"),
+     *     @OA\Response(response=422, description="Validation error")
      * )
      */
     public function store(Request $request)
@@ -148,14 +151,21 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
+        $authUser = Auth::user();
+
+        if ($authUser->type !== 'admin') {
+            return response()->json(['message' => 'Apenas administradores podem acessar esta rota.'], 403);
+        }
+
         $user = User::findOrFail($id);
         return response()->json($user);
     }
 
+
     /**
      * @OA\Put(
-     *     path="/api/users/{id}",
-     *     summary="Update a user",
+     *     path="/api/users/update/{id}",
+     *     summary="Update user",
      *     tags={"User"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -202,8 +212,8 @@ class UserController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/users/{id}",
-     *     summary="Delete a user",
+     *     path="/api/users/delete/{id}",
+     *     summary="Delete user",
      *     tags={"User"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -223,6 +233,6 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
 
-        return response()->json(['message' => 'User deleted successfully.']);
+        return response()->json(['message' => 'Usuario deletado com sucess.']);
     }
 }

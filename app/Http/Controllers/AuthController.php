@@ -6,8 +6,41 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
+
+
 class AuthController extends Controller
 {
+   /**
+ * @OA\Post(
+ *     path="/api/login",
+ *     tags={"Auth"},
+ *     summary="Login do usuário e geração do token JWT",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"email","password"},
+ *             @OA\Property(property="email", type="string", format="email", example="andressa@example.com"),
+ *             @OA\Property(property="password", type="string", format="password", example="123456")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Login realizado com sucesso",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Login realizado com sucesso."),
+ *             @OA\Property(property="token", type="string", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJI..."),
+ *             @OA\Property(property="user", ref="#/components/schemas/User")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Credenciais inválidas",
+ *         @OA\JsonContent(@OA\Property(property="message", type="string", example="Credenciais inválidas."))
+ *     ),
+ *     @OA\Response(response=422, description="Erro de validação no login"),
+ *     security={}
+ * )
+ */
     // Login - gera token JWT
    public function login(Request $request)
    {
