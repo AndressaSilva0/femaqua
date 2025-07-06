@@ -17,7 +17,6 @@ Essa aplicação permite o cadastro, listagem, filtro e remoção de ferramentas
 - [x] Autenticação JWT
 - [x] Documentação Swagger completa
 - [x] Migrations para banco MySQL
-- [x] README profissional e completo ✅
 
 ---
 
@@ -29,8 +28,6 @@ Essa aplicação permite o cadastro, listagem, filtro e remoção de ferramentas
 - **JWT (tymon/jwt-auth)**
 - **Swagger (l5-swagger)**
 - **Doctrine DBAL**
-- **Pest (testes)**
-- **Laravel Pint (formatador)**
 
 ---
 
