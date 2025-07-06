@@ -85,9 +85,76 @@
                     },
                     "422": {
                         "description": "Erro de validação no login"
+                    },
+                    "500": {
+                        "description": "Erro interno ao realizar login"
                     }
                 },
                 "security": []
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout do usuário (invalida o token)",
+                "operationId": "fe8f3429cd6979b3b4517e186505f9f9",
+                "responses": {
+                    "200": {
+                        "description": "Logout realizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logout realizado com sucesso"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/me": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Retorna dados do usuário autenticado",
+                "operationId": "9d9bc556f927575aa492a88c28fe5908",
+                "responses": {
+                    "200": {
+                        "description": "Usuário autenticado retornado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/tags": {
@@ -99,7 +166,7 @@
                 "operationId": "4d0f4baf9e6fa992c0d85fbf140ebf17",
                 "responses": {
                     "200": {
-                        "description": "Lista de tags",
+                        "description": "Lista de tags retornada com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -107,7 +174,8 @@
                                     "items": {
                                         "properties": {
                                             "nome": {
-                                                "type": "string"
+                                                "type": "string",
+                                                "example": "api"
                                             }
                                         },
                                         "type": "object"
@@ -115,6 +183,9 @@
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
                     }
                 },
                 "security": [
@@ -150,10 +221,46 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Tag criada com sucesso"
+                        "description": "Tag criada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "nome": {
+                                            "type": "string",
+                                            "example": "api"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Erro de validação"
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro de validação"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
                     }
                 },
                 "security": [
@@ -168,22 +275,63 @@
                 "tags": [
                     "Tools"
                 ],
-                "summary": "Listar ferramentas ou filtrar por tag",
+                "summary": "Listar todas as ferramentas ou filtrar por tag",
+                "description": "Retorna todas as ferramentas cadastradas. Pode-se filtrar por nome da tag usando o parâmetro 'tag'.",
                 "operationId": "21747b624f411296ff516e7e5e4cd802",
                 "parameters": [
                     {
                         "name": "tag",
                         "in": "query",
-                        "description": "Nome da tag para filtrar ferramentas",
+                        "description": "Nome da tag para filtrar as ferramentas (ex: 'organization')",
                         "required": false,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "organization"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Lista de ferramentas"
+                        "description": "Lista de ferramentas retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "title": {
+                                                "type": "string",
+                                                "example": "Notion"
+                                            },
+                                            "link": {
+                                                "type": "string",
+                                                "format": "url",
+                                                "example": "https://notion.so"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "All in one workspace"
+                                            },
+                                            "tags": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "example": "organization"
+                                                }
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno ao buscar ferramentas"
                     }
                 },
                 "security": [
@@ -197,6 +345,7 @@
                     "Tools"
                 ],
                 "summary": "Cadastrar nova ferramenta",
+                "description": "Cadastra uma nova ferramenta e associa com tags. Todos os campos são obrigatórios. O usuário precisa estar autenticado.",
                 "operationId": "33e623bca5019a757233c3bf6d7924f4",
                 "requestBody": {
                     "required": true,
@@ -211,23 +360,34 @@
                                 ],
                                 "properties": {
                                     "title": {
+                                        "description": "Título da ferramenta (até 100 caracteres)",
                                         "type": "string",
+                                        "maxLength": 100,
+                                        "minLength": 1,
                                         "example": "Notion"
                                     },
                                     "link": {
+                                        "description": "URL da ferramenta",
                                         "type": "string",
+                                        "format": "url",
+                                        "maxLength": 255,
                                         "example": "https://notion.so"
                                     },
                                     "description": {
+                                        "description": "Descrição da ferramenta",
                                         "type": "string",
-                                        "example": "All in one workspace"
+                                        "minLength": 1,
+                                        "example": "All in one workspace for notes, tasks, and wikis."
                                     },
                                     "tags": {
+                                        "description": "Lista de tags (mínimo 1)",
                                         "type": "array",
                                         "items": {
                                             "type": "string",
+                                            "maxLength": 50,
                                             "example": "organization"
-                                        }
+                                        },
+                                        "minItems": 1
                                     }
                                 },
                                 "type": "object"
@@ -237,10 +397,62 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Ferramenta criada com sucesso"
+                        "description": "Ferramenta criada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Ferramenta criada com sucesso."
+                                        },
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 5
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Notion"
+                                        },
+                                        "link": {
+                                            "type": "string",
+                                            "example": "https://notion.so"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Workspace completo"
+                                        },
+                                        "tags": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "organization"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Erro de validação"
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro de validação."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -255,27 +467,89 @@
                 "tags": [
                     "Tools"
                 ],
-                "summary": "Deletar ferramenta",
+                "summary": "Deletar uma ferramenta",
+                "description": "Remove uma ferramenta existente. Apenas administradores podem realizar essa ação.",
                 "operationId": "0c785bc483bd17fac39628eddfe13d00",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
+                        "description": "ID da ferramenta a ser deletada",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 3
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Ferramenta deletada com sucesso"
+                        "description": "Ferramenta deletada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Ferramenta deletada com sucesso."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "403": {
-                        "description": "Acesso negado (não é admin)"
+                        "description": "Acesso negado (usuário não é admin)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Apenas administradores podem remover ferramentas."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Ferramenta não encontrada"
+                        "description": "Ferramenta não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Ferramenta não encontrada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno ao deletar ferramenta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro ao deletar ferramenta."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Mensagem detalhada do erro"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -290,11 +564,11 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "List all users",
+                "summary": "Listar todos os usuários (apenas admin)",
                 "operationId": "c457726701591d1183b53aa71fc13441",
                 "responses": {
                     "200": {
-                        "description": "List of users",
+                        "description": "Lista de usuários retornada com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -306,8 +580,11 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Acesso negado (somente administradores)"
+                    },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Não autorizado"
                     }
                 },
                 "security": [
@@ -322,7 +599,7 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Register a new user",
+                "summary": "Registrar novo usuário",
                 "operationId": "953cbd71099d3540e7e8ca0f408851d8",
                 "requestBody": {
                     "required": true,
@@ -359,10 +636,13 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "User created"
+                        "description": "Usuário criado com sucesso"
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Erro de validação"
+                    },
+                    "500": {
+                        "description": "Erro interno no servidor"
                     }
                 }
             }
@@ -372,13 +652,13 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Get a user by ID",
+                "summary": "Buscar usuário por ID (apenas admin)",
                 "operationId": "36a33ff774d5cba33c039dec2c3e0287",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "User ID",
+                        "description": "ID do usuário",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -387,20 +667,16 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "User details",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/User"
-                                }
-                            }
-                        }
+                        "description": "Usuário retornado com sucesso"
+                    },
+                    "403": {
+                        "description": "Acesso negado (somente administradores)"
                     },
                     "404": {
-                        "description": "User not found"
+                        "description": "Usuário não encontrado"
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Não autorizado"
                     }
                 },
                 "security": [
@@ -415,13 +691,13 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Update user",
+                "summary": "Atualizar dados do usuário",
                 "operationId": "97d6cee3e6d901306b2a691941b07ef0",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "User ID",
+                        "description": "ID do usuário",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -448,7 +724,7 @@
                                     },
                                     "type": {
                                         "type": "string",
-                                        "example": "user"
+                                        "example": "admin"
                                     }
                                 },
                                 "type": "object"
@@ -458,16 +734,16 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "User updated successfully"
+                        "description": "Usuário atualizado com sucesso"
                     },
                     "404": {
-                        "description": "User not found"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
+                        "description": "Usuário não encontrado"
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Erro de validação"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
                     }
                 },
                 "security": [
@@ -482,13 +758,13 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Delete user",
+                "summary": "Deletar usuário",
                 "operationId": "9715e31688901372e9b3959ff93d0422",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "User ID",
+                        "description": "ID do usuário",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -497,13 +773,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "User deleted successfully"
+                        "description": "Usuário deletado com sucesso"
                     },
                     "404": {
-                        "description": "User not found"
+                        "description": "Usuário não encontrado"
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Não autorizado"
                     }
                 },
                 "security": [
@@ -554,12 +830,12 @@
     },
     "tags": [
         {
-            "name": "Tags",
-            "description": "Gerenciamento de tags"
+            "name": "Auth",
+            "description": "Autenticação de usuários"
         },
         {
-            "name": "Auth",
-            "description": "Auth"
+            "name": "Tags",
+            "description": "Gerenciamento de tags"
         },
         {
             "name": "Tools",
