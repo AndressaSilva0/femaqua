@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
-
 /**
  * @OA\Info(
  *     version="1.0.0",
@@ -38,18 +37,19 @@ use Illuminate\Support\Facades\Auth;
  */
 class UserController extends Controller
 {
-   /**
+    /**
      * @OA\Get(
      *     path="/api/users",
-     *     summary="List all users",
+     *     summary="Listar todos os usuários (apenas admin)",
      *     tags={"User"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="List of users",
+     *         description="Lista de usuários retornada com sucesso",
      *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/User"))
      *     ),
-     *     @OA\Response(response=401, description="Unauthorized")
+     *     @OA\Response(response=403, description="Acesso negado (somente administradores)"),
+     *     @OA\Response(response=401, description="Não autorizado")
      * )
      */
     public function index()
@@ -63,11 +63,10 @@ class UserController extends Controller
         return response()->json(User::all());
     }
 
-
     /**
      * @OA\Post(
      *     path="/api/register",
-     *     summary="Register a new user",
+     *     summary="Registrar novo usuário",
      *     tags={"User"},
      *     @OA\RequestBody(
      *         required=true,
@@ -79,29 +78,29 @@ class UserController extends Controller
      *             @OA\Property(property="type", type="string", example="user")
      *         )
      *     ),
-     *     @OA\Response(response=201, description="User created"),
-     *     @OA\Response(response=422, description="Validation error")
+     *     @OA\Response(
+     *         response=201,
+     *         description="Usuário criado com sucesso"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno no servidor"
+     *     )
      * )
      */
     public function store(Request $request)
     {
         try {
-            $validated = $request->validate(
-                [
-                    'name' => 'required|string|max:100',
-                    'email' => 'required|email|unique:users',
-                    'password' => 'required|min:6',
-                    'type' => 'in:user,admin',
-                ],
-                [
-                    'email.unique' => 'Este e-mail já está cadastrado no sistema.',
-                    'password.min' => 'A senha deve conter no mínimo 6 caracteres.',
-                    'email.required' => 'O campo de e-mail é obrigatório.',
-                    'name.required' => 'O campo de nome é obrigatório.',
-                    'password.required' => 'O campo de senha é obrigatório.',
-                    'type.in' => 'O tipo de usuário deve ser "user" ou "admin".'
-                ]
-            );
+            $validated = $request->validate([
+                'name' => 'required|string|max:100',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|min:6',
+                'type' => 'in:user,admin',
+            ]);
 
             $user = User::create([
                 'name' => $validated['name'],
@@ -130,23 +129,23 @@ class UserController extends Controller
     /**
      * @OA\Get(
      *     path="/api/users/{id}",
-     *     summary="Get a user by ID",
+     *     summary="Buscar usuário por ID (apenas admin)",
      *     tags={"User"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         required=true,
-     *         description="User ID",
+     *         description="ID do usuário",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="User details",
-     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *         description="Usuário retornado com sucesso"
      *     ),
-     *     @OA\Response(response=404, description="User not found"),
-     *     @OA\Response(response=401, description="Unauthorized")
+     *     @OA\Response(response=403, description="Acesso negado (somente administradores)"),
+     *     @OA\Response(response=404, description="Usuário não encontrado"),
+     *     @OA\Response(response=401, description="Não autorizado")
      * )
      */
     public function show(string $id)
@@ -161,18 +160,17 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-
     /**
      * @OA\Put(
      *     path="/api/users/update/{id}",
-     *     summary="Update user",
+     *     summary="Atualizar dados do usuário",
      *     tags={"User"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         required=true,
-     *         description="User ID",
+     *         description="ID do usuário",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\RequestBody(
@@ -181,13 +179,13 @@ class UserController extends Controller
      *             @OA\Property(property="name", type="string", example="Maria Dev"),
      *             @OA\Property(property="email", type="string", example="maria@example.com"),
      *             @OA\Property(property="password", type="string", example="123456"),
-     *             @OA\Property(property="type", type="string", example="user")
+     *             @OA\Property(property="type", type="string", example="admin")
      *         )
      *     ),
-     *     @OA\Response(response=200, description="User updated successfully"),
-     *     @OA\Response(response=404, description="User not found"),
-     *     @OA\Response(response=401, description="Unauthorized"),
-     *     @OA\Response(response=422, description="Validation error")
+     *     @OA\Response(response=200, description="Usuário atualizado com sucesso"),
+     *     @OA\Response(response=404, description="Usuário não encontrado"),
+     *     @OA\Response(response=422, description="Erro de validação"),
+     *     @OA\Response(response=401, description="Não autorizado")
      * )
      */
     public function update(Request $request, string $id)
@@ -213,19 +211,22 @@ class UserController extends Controller
     /**
      * @OA\Delete(
      *     path="/api/users/delete/{id}",
-     *     summary="Delete user",
+     *     summary="Deletar usuário",
      *     tags={"User"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         required=true,
-     *         description="User ID",
+     *         description="ID do usuário",
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(response=200, description="User deleted successfully"),
-     *     @OA\Response(response=404, description="User not found"),
-     *     @OA\Response(response=401, description="Unauthorized")
+     *     @OA\Response(
+     *         response=200,
+     *         description="Usuário deletado com sucesso"
+     *     ),
+     *     @OA\Response(response=404, description="Usuário não encontrado"),
+     *     @OA\Response(response=401, description="Não autorizado")
      * )
      */
     public function destroy(string $id)
@@ -233,6 +234,6 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
 
-        return response()->json(['message' => 'Usuario deletado com sucess.']);
+        return response()->json(['message' => 'Usuário deletado com sucesso.']);
     }
 }

@@ -21,9 +21,13 @@ class TagController extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Lista de tags",
-     *         @OA\JsonContent(type="array", @OA\Items(type="object", @OA\Property(property="nome", type="string")))
-     *     )
+     *         description="Lista de tags retornada com sucesso",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(type="object", @OA\Property(property="nome", type="string", example="api"))
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Não autorizado")
      * )
      */
     public function index()
@@ -44,16 +48,36 @@ class TagController extends Controller
      *             @OA\Property(property="nome", type="string", example="api")
      *         )
      *     ),
-     *     @OA\Response(response=201, description="Tag criada com sucesso"),
-     *     @OA\Response(response=422, description="Erro de validação")
+     *     @OA\Response(
+     *         response=201,
+     *         description="Tag criada com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="nome", type="string", example="api")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Erro de validação"),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Não autorizado")
      * )
      */
     public function store(Request $request)
     {
-        $request->validate(['nome' => 'required|unique:tags']);
+        $validated = $request->validate([
+            'nome' => 'required|string',
+        ], [
+            'nome.required' => 'O campo nome é obrigatório.',
+            'nome.string' => 'O nome deve ser uma string.',
+        ]);
 
         $tag = Tag::create([
-            'nome' => $request->nome
+            'nome' => $validated['nome']
         ]);
 
         return response()->json($tag, 201);
