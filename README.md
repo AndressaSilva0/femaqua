@@ -214,11 +214,14 @@ Content-Type: application/json
 - 🖼 Bônus: Modelagem Banco de Dados + Desenho funcionamento da Api
 ---
 ## 📥 Modelagem Banco de Dados
-![Funcionamento do Banco de Dados](assets\femaqua.png)
+<img width="1303" height="607" alt="Image" src="https://github.com/user-attachments/assets/92328e1b-a8fd-41d6-a4b4-e8b59efae86c" />
+
 > [Database Model Link](https://dbdiagram.io/d/femaqua-68645470f413ba3508cb6c38)
 ---
+
 ## 💻 Desenho do Funcionamento da API
-![Funcionamento do Banco de Dados](assets\funcionamento-api.png)
+<img width="1536" height="1024" alt="Image" src="https://github.com/user-attachments/assets/ac3050f0-187b-45a4-830f-8d907531194c" />
+
 ---
 ## 🧠 Autor
 
