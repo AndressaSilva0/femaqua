@@ -207,7 +207,7 @@ Content-Type: application/json
 
 - 🔁 Migrations + Seeders
 
-- 📦 Estrutura limpa com Controllers, Models e Services
+- 📦 Estrutura limpa com Controllers, Models e Providers
 - 🖼 Bônus: Modelagem Banco de Dados + Desenho funcionamento da Api
 ---
 ## 📥 Modelagem Banco de Dados
